@@ -1,97 +1,111 @@
+```markdown
 # Iris Flower Classification - Production ML Project
 
-مشروع متكامل لتصنيف زهور السوسن (Iris Flower Classification) مبني وفق أفضل الممارسات الهندسية لنقل نماذج التعلم الآلي من بيئة التجارب إلى الإنتاج (From Notebook to Production Deployment).
+A complete end-to-end Machine Learning project for classifying Iris flowers, built following engineering best practices to take models from notebook experiments to production deployment.
 
 ---
 
-## 🏗️ Project Architecture (هيكل المشروع)
+## Project Architecture
 
 ```text
 iris_classification_project/
-├── .gitignore               # تجاهل ملفات البيئة الافتراضية والـ cache والـ logs
-├── README.md                # دليل استخدام وتوثيق المشروع
-├── requirements.txt         # تبعات بايثون
-├── Dockerfile               # بناء صورة دوكر للتطبيق
-├── docker-compose.yml       # تشغيل الحاوية بسهولة
-├── run.py                   # نقطة تشغيل التدريب والتجربة محلياً
-├── run_app.py               # نقطة تشغيل سيرفر Flask
-├── logs.log                 # ملف حفظ سجلات الأحداث (Logging)
+├── .gitignore               # Ignore virtual environment, cache, and log files
+├── README.md                # Project documentation and usage guide
+├── requirements.txt         # Python dependencies
+├── Dockerfile               # Docker image definition for the application
+├── docker-compose.yml       # Easy container orchestration
+├── run.py                   # Local training and experimentation entry point
+├── run_app.py               # Flask server entry point
+├── logs.log                 # Application event logs
 │
-├── data/                    # مجلد حفظ البيانات (iris.csv)
+├── data/                    # Dataset storage (iris.csv)
 │
 ├── src/
-│   ├── conf/                # إعدادات المشروع (json-driven)
-│   │   ├── design.json      # المعاملات (Hyperparameters, CV folds, paths)
-│   │   └── config.py        # دالة get_default() لتحميل الإعدادات ديناميكياً
+│   ├── conf/                # Project configuration (JSON-driven)
+│   │   ├── design.json      # Hyperparameters, CV folds, paths
+│   │   └── config.py        # get_default() for dynamic config loading
 │   │
-│   ├── utils/               # أدوات مساعدة
-│   │   └── logger.py        # نظام التتبع والـ Logging الاحترافي
+│   ├── utils/               # Helper utilities
+│   │   └── logger.py        # Professional logging system
 │   │
-│   ├── main/                # منطق الـ Machine Learning
-│   │   ├── data_loader.py   # تحميل وتجهيز البيانات
-│   │   ├── preprocessing.py # التقسيم الطبقي (Stratified Split) ومعالجة الخصائص
-│   │   ├── train.py         # ضبط المعاملات عبر GridSearchCV والتدريب وحفظ النموذج
-│   │   └── predict.py       # قراءة النموذج واستخراج التوقعات والاحتماليات
+│   ├── main/                # Core Machine Learning logic
+│   │   ├── data_loader.py   # Data loading and preparation
+│   │   ├── preprocessing.py # Stratified split and feature processing
+│   │   ├── train.py         # GridSearchCV hyperparameter tuning, training, and model persistence
+│   │   └── predict.py       # Model loading, predictions, and probability extraction
 │   │
-│   ├── resources/           # حفظ النموذج المدرب (model.joblib)
+│   ├── resources/           # Trained model storage (model.joblib)
 │   │
-│   └── template_app/        # تطبيق الـ API باستخدام Flask
-│       └── app.py           # الـ Endpoints لاستقبال البيانات وإرجاع التوقعات
+│   └── template_app/        # Flask-based REST API
+│       └── app.py           # Endpoints for receiving data and returning predictions
 │
-└── tests/                   # ملفات اختبارات الوحدة (Unit Tests)
-    ├── test_data.py         # اختبار جودة وتقسيم البيانات
-    ├── test_model.py        # اختبار دقة النموذج وسلامة التنبؤ
-    └── test_app.py          # اختبار واجهات الـ REST API
+└── tests/                   # Unit tests
+    ├── test_data.py         # Data quality and split tests
+    ├── test_model.py        # Model accuracy and prediction integrity tests
+    └── test_app.py          # REST API endpoint tests
 ```
 
 ---
 
-## 🚀 كيفية التثبيت والتشغيل (Quick Start)
+## Quick Start
 
-### 1. إعداد البيئة الافتراضية وتثبيت التبعات
+### 1. Environment Setup
+
 ```bash
-# إنشاء بيئة افتراضية
+# Create virtual environment
 python -m venv venv
 
-# تفعيل البيئة (Windows PowerShell)
+# Activate the environment
+# Windows (PowerShell)
 .\venv\Scripts\Activate.ps1
+# Linux / macOS
+source venv/bin/activate
 
-# تثبيت المكتبات
+# Install dependencies
 pip install -r requirements.txt
 ```
 
-### 2. تدريب وتقييم الموديل محلياً
+### 2. Train and Evaluate the Model Locally
+
 ```bash
 python run.py
 ```
-يقوم هذا الأمر بـ:
-1. جلب/تحميل بيانات Iris.
-2. تقسيم البيانات stratified train/test split.
-3. تدريب النموذج مع `GridSearchCV` والـ Cross Validation.
-4. حساب مقاييس التقييم (Accuracy & Classification Report).
-5. حفظ النموذج في `src/resources/model.joblib`.
-6. اختبار عينة تنبؤ سريعة.
 
-### 3. تشغيل الاختبارات الآلية (Testing Suite)
+This command will:
+
+1. Load the Iris dataset
+2. Perform a stratified train/test split
+3. Train the model using `GridSearchCV` with cross-validation
+4. Compute evaluation metrics (Accuracy & Classification Report)
+5. Save the trained model to `src/resources/model.joblib`
+6. Run a quick sample prediction test
+
+### 3. Run the Test Suite
+
 ```bash
 pytest
 ```
 
-### 4. تشغيل خادم الـ API عبر Flask
+### 4. Start the Flask API Server
+
 ```bash
 python run_app.py
 ```
-يعمل السيرفر على: `http://localhost:5000`
+
+The server will be available at: `http://localhost:5000`
 
 ---
 
-## 📡 واجهات الـ API (Endpoints)
+## API Endpoints
 
-### 1. فحص الحالة (Health Check)
+### 1. Health Check
+
 ```http
 GET /health
 ```
+
 **Response:**
+
 ```json
 {
   "status": "healthy",
@@ -99,13 +113,15 @@ GET /health
 }
 ```
 
-### 2. إرسال طلب تنبؤ (Predict Endpoint)
+### 2. Prediction Endpoint
+
 ```http
 POST /predict
 Content-Type: application/json
 ```
 
-**مثال على مدخلات بصيغة قائمة (List of features):**
+**Input format (list of feature vectors):**
+
 ```json
 {
   "features": [
@@ -115,7 +131,8 @@ Content-Type: application/json
 }
 ```
 
-**مثال على مدخلات بمفردها (Dictionary):**
+**Input format (single sample as dictionary):**
+
 ```json
 {
   "sepal_length": 5.1,
@@ -125,7 +142,8 @@ Content-Type: application/json
 }
 ```
 
-**نموذج الاستجابة (Output):**
+**Example Response:**
+
 ```json
 {
   "status": "success",
@@ -147,9 +165,31 @@ Content-Type: application/json
 
 ---
 
-## 🐳 التشغيل باستخدام Docker
+## Docker Deployment
 
 ```bash
-# بناء الصورة وتشغيل الحاوية
+# Build the image and start the container
 docker compose up --build
+```
+
+The API will be accessible at `http://localhost:5000` once the container is running.
+
+---
+
+## Features
+
+- **JSON-driven configuration** for hyperparameters and paths
+- **Stratified train/test splitting** to preserve class distribution
+- **GridSearchCV** with cross-validation for robust hyperparameter tuning
+- **Professional logging** system
+- **Model persistence** with joblib
+- **Flask REST API** with health and prediction endpoints
+- **Unit tests** covering data, model, and API layers
+- **Docker support** for reproducible deployment
+
+---
+
+## License
+
+This project is intended for educational and demonstration purposes.
 ```
