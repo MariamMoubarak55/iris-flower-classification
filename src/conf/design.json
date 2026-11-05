@@ -1,0 +1,27 @@
+{
+  "dataset": {
+    "test_size": 0.2,
+    "random_state": 42,
+    "target_column": "species"
+  },
+  "training": {
+    "num_folds": 5,
+    "scoring": "accuracy",
+    "model_type": "LogisticRegression",
+    "hyperparameters": {
+      "max_iter": 200,
+      "C": 1.0,
+      "random_state": 42
+    }
+  },
+  "paths": {
+    "model_path": "src/resources/model.joblib",
+    "log_file": "logs.log",
+    "data_path": "data/iris.csv"
+  },
+  "server": {
+    "host": "0.0.0.0",
+    "port": 5000,
+    "debug": false
+  }
+}

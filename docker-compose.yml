@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  iris-classifier:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: iris-classification-service:latest
+    container_name: iris_classifier_api
+    ports:
+      - "5000:5000"
+    environment:
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
